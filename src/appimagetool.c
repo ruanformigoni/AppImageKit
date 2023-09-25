@@ -166,11 +166,11 @@ int sfs_mksquashfs(char *source, char *destination, int offset) {
         bool use_xz = strcmp(sqfs_comp, "xz") >= 0;
 
         int i = 0;
-#ifndef AUXILIARY_FILES_DESTINATION
-        args[i++] = "mksquashfs";
-#else
-        args[i++] = pathToMksquashfs;
-#endif
+// #ifndef AUXILIARY_FILES_DESTINATION
+         args[i++] = "mksquashfs";
+// #else
+//         args[i++] = pathToMksquashfs;
+// #endif
         args[i++] = source;
         args[i++] = destination;
         args[i++] = "-offset";
@@ -232,6 +232,12 @@ int sfs_mksquashfs(char *source, char *destination, int offset) {
                 printf("%s ", *t);
             }
             printf("\n");
+        }
+
+        printf("Arguments for squashfs\n");
+        for( int j=0; j < i; ++j )
+        {
+            printf("-- %s", args[j]);
         }
 
 #ifndef AUXILIARY_FILES_DESTINATION
@@ -609,8 +615,8 @@ main (int argc, char *argv[])
     if (showVersionOnly)
         exit(0);
 
-    if(!((0 == strcmp(sqfs_comp, "gzip")) || (0 ==strcmp(sqfs_comp, "xz"))))
-        die("Only gzip (faster execution, larger files) and xz (slower execution, smaller files) compression is supported at the moment. Let us know if there are reasons for more, should be easy to add. You could help the project by doing some systematic size/performance measurements. Watch for size, execution speed, and zsync delta size.");
+    if(!((0 == strcmp(sqfs_comp, "gzip")) || (0 ==strcmp(sqfs_comp, "xz")) || (0 ==strcmp(sqfs_comp, "zstd"))))
+        die("Only gzip (faster execution, larger files), xz (slower execution, smaller files) and zstd compression is supported at the moment. Let us know if there are reasons for more, should be easy to add. You could help the project by doing some systematic size/performance measurements. Watch for size, execution speed, and zsync delta size.");
     /* Check for dependencies here. Better fail early if they are not present. */
     if(! g_find_program_in_path ("file"))
         die("file command is missing but required, please install it");
